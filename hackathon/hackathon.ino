@@ -79,7 +79,7 @@ void setup()
 
     // JSON
     // Allocate the JSON document
-    const size_t capacity = JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(6) + 390;
+    const size_t capacity = JSON_ARRAY_SIZE(1) + 2*JSON_OBJECT_SIZE(6) + 510;
     DynamicJsonDocument doc(capacity);
 
     // Parse JSON object
@@ -93,12 +93,19 @@ void setup()
     }
 
     // Get the Name:
+    JsonObject utxos_0 = doc["utxos"][0];
+    const char* utxos_0_txid = utxos_0["txid"];
+    int utxos_0_vout = utxos_0["vout"];
+    float utxos_0_amount = utxos_0["amount"];
+    long utxos_0_satoshis = utxos_0["satoshis"];
+    int utxos_0_confirmations = utxos_0["confirmations"];
+    long utxos_0_ts = utxos_0["ts"];
     const char* legacyAddress = doc["legacyAddress"];
     const char* cashAddress = doc["cashAddress"];
     const char* slpAddress = doc["slpAddress"];
     const char* scriptPubKey = doc["scriptPubKey"];
 
-    
+    Serial.println(utxos_0_txid);
     Serial.println(legacyAddress);
     Serial.println(cashAddress);
     Serial.println(slpAddress);
