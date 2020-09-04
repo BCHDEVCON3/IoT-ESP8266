@@ -55,7 +55,7 @@ void setup()
         return;
     }
 
-    String url = "/v2/address/details/bitcoincash:qqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    String url = "/v2/address/unconfirmed/bitcoincash:qqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx9";
     Serial.print("requesting URL: ");
     Serial.println(url);
 
@@ -79,7 +79,7 @@ void setup()
 
     // JSON
     // Allocate the JSON document
-    const size_t capacity = JSON_ARRAY_SIZE(1000) + JSON_OBJECT_SIZE(16) + 72640;
+    const size_t capacity = JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(6) + 390;
     DynamicJsonDocument doc(capacity);
 
     // Parse JSON object
@@ -92,26 +92,18 @@ void setup()
         return;
     }
 
-    JsonObject root_0 = doc[0];
-    Serial.println("JSON Docss");
-    Serial.println(root_0);
-
     // Get the Name:
-    const char *root_0_name = root_0["name"];
+    const char* legacyAddress = doc["legacyAddress"];
+    const char* cashAddress = doc["cashAddress"];
+    const char* slpAddress = doc["slpAddress"];
+    const char* scriptPubKey = doc["scriptPubKey"];
 
-    // if (line.startsWith("{\"state\":\"success\""))
-    // {
-    //     Serial.println("esp8266/Arduino CI successfull!");
-    // }
-    // else
-    // {
-    //     Serial.println("esp8266/Arduino CI has failed");
-    // }
-    Serial.println("Name was");
-    Serial.println("==========");
-    Serial.println(root_0_name);
-    Serial.println("==========");
-    Serial.println("closing connection");
+    
+    Serial.println(legacyAddress);
+    Serial.println(cashAddress);
+    Serial.println(slpAddress);
+    Serial.println(scriptPubKey);
+    
 }
 
 void loop() {
