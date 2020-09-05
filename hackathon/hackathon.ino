@@ -21,7 +21,7 @@ const char fingerprint[] PROGMEM = "DB AB 4F 13 A0 85 59 9D 12 E5 38 9F 19 0D 95
 WiFiClientSecure client;
 
 void makeRequest() {
-    String url = "/v2/address/unconfirmed/bitcoincash:qr94atyg94rcuh76gxhk6wl89m4plcx9p5tn5wqjp9";
+    String url = "/v2/address/unconfirmed/bitcoincash:qqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx9";
     Serial.print("requesting URL: ");
     Serial.println(url);
    
