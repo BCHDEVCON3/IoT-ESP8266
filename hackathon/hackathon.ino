@@ -1,6 +1,5 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
-
 // Include JSON Library https://arduinojson.org
 #define ARDUINOJSON_USE_LONG_LONG 1
 #include <ArduinoJson.h>
@@ -12,52 +11,20 @@
 
 const char *ssid = STASSID;
 const char *password = STAPSK;
-
 const char *host = "rest.bitcoin.com";
 
 // HTTPS Port
 const int httpsPort = 443;
 
-// Use web browser to view and copy
 // SHA1 fingerprint of the certificate
 const char fingerprint[] PROGMEM = "DB AB 4F 13 A0 85 59 9D 12 E5 38 9F 19 0D 95 3E BC D0 02 A1";
+WiFiClientSecure client;
 
-void setup()
-{
-    // Wifi
-    Serial.begin(115200);
-    Serial.println();
-    Serial.print("connecting to ");
-    Serial.println(ssid);
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        Serial.print(".");
-    }
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
-
-    // Use WiFiClientSecure class to create TLS connection
-    WiFiClientSecure client;
-    Serial.print("connecting to ");
-    Serial.println(host);
-
-    //Serial.printf("Using fingerprint '%s'\n", fingerprint);
-    client.setFingerprint(fingerprint);
-
-    if (!client.connect(host, httpsPort))
-    {
-        Serial.println("connection failed");
-        return;
-    }
-
-    String url = "/v2/address/unconfirmed/bitcoincash:qqxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx9";
+void makeRequest() {
+    String url = "/v2/address/unconfirmed/bitcoincash:qr94atyg94rcuh76gxhk6wl89m4plcx9p5tn5wqjp9";
     Serial.print("requesting URL: ");
     Serial.println(url);
+   
 
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
@@ -65,17 +32,22 @@ void setup()
                  "Connection: close\r\n\r\n");
 
     Serial.println("request sent");
+
     while (client.connected())
     {
         String line = client.readStringUntil('\n');
         if (line == "\r")
         {
             Serial.println("headers received");
+            while (client.available()) {
+              char c = 0;
+              client.readBytes(&c, 1);
+              Serial.print(c);
+              }
             break;
         }
     }
 
-    // String line = client.readString();
 
     // JSON
     // Allocate the JSON document
@@ -110,7 +82,41 @@ void setup()
     Serial.println(cashAddress);
     Serial.println(slpAddress);
     Serial.println(scriptPubKey);
-    
+}
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT); // initialize onboard LED
+    // Wifi
+    Serial.begin(115200);
+    Serial.println();
+    Serial.print("connecting to ");
+    Serial.println(ssid);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+
+    // Use WiFiClientSecure class to create TLS connection
+    Serial.print("connecting to ");
+    Serial.println(host);
+
+    //Serial.printf("Using fingerprint '%s'\n", fingerprint);
+    client.setFingerprint(fingerprint);
+
+    if (!client.connect(host, httpsPort))
+    {
+        Serial.println("connection failed");
+        return;
+    }
+
+    makeRequest();
 }
 
 void loop() {
