@@ -266,12 +266,19 @@ const char* makeSecondRequest(String addr) {
     return utxos_0_txid;
   }
 }
+
+// the following if statement could apply to a 
+// relay module & a 5V/12V power supply to automate a 
+// variety of appliances, from lights to candy machines
+// That's fucking right. I'm coming for you Iozeta.
 void loop() {
   const char* txid = makeRequest("bitcoincash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9");
   delay (10000);
   const char* txid2 = makeSecondRequest("bitcoincash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9");
-  if (&txid != &txid2) { // what I really wanna do is compare txids between requests and 
-    digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN)); // trigger something
-  } // if the transaction id's are different + potentially of certain value
+  if (&txid != &txid2) { 
+    digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN)); 
+  } 
   delay (50000000);
 }
+// I chose to opt in to toggle a built-in led because
+// simplicity and beauty ;)
